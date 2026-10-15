@@ -24,7 +24,7 @@ const MIME_TYPES = {
 };
 
 // Optional API build support
-const CSharpParser = require('./static/js/csharp-parser');
+const LangParsers = require('./static/js/lang-parsers');
 const CFGBuilder = require('./static/js/cfg-builder');
 const GOSTLayout = require('./static/js/gost-layout');
 const GOSTRenderer = require('./static/js/gost-renderer');
@@ -49,7 +49,8 @@ const server = http.createServer((req, res) => {
       try {
         const payload = JSON.parse(body);
         const code = payload.code || '';
-        const ast = CSharpParser.parse(code);
+        const lang = payload.lang || 'csharp';
+        const ast = LangParsers.parse(code, lang);
         const cfg = CFGBuilder.buildCFG(ast, { showMethodName: true });
         const model = GOSTLayout.layoutDiagram(cfg);
         const svg = GOSTRenderer.renderModelSVG(model);

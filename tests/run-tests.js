@@ -1,9 +1,9 @@
-// tests/run-tests.js - Automated test suite for C# GOST 19.701-90 flowchart generator
+// tests/run-tests.js - Automated test suite for ГОСТ 19.701-90 flowchart generator (C#, Python, C++, C, Go)
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
-const CSharpParser = require('../static/js/csharp-parser');
+const LangParsers = require('../static/js/lang-parsers');
 const CFGBuilder = require('../static/js/cfg-builder');
 const GOSTLayout = require('../static/js/gost-layout');
 const GOSTRenderer = require('../static/js/gost-renderer');
@@ -16,10 +16,13 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 }
 
 console.log('======================================================');
-console.log('  Запуск тестов C# ГОСТ 19.701-90 Flowchart');
+console.log('  Запуск тестов ГОСТ 19.701-90 (C#, Python, C++, C, Go)');
 console.log('======================================================\n');
 
-const files = fs.readdirSync(FIXTURES_DIR).filter(f => f.endsWith('.cs')).sort();
+const validExts = ['.cs', '.py', '.cpp', '.c', '.go'];
+const files = fs.readdirSync(FIXTURES_DIR)
+  .filter(f => validExts.includes(path.extname(f).toLowerCase()))
+  .sort();
 
 let passed = 0;
 let failed = 0;
@@ -27,10 +30,17 @@ let failed = 0;
 files.forEach(file => {
   const filePath = path.join(FIXTURES_DIR, file);
   const code = fs.readFileSync(filePath, 'utf8');
+  const ext = path.extname(file).toLowerCase();
+
+  let lang = 'csharp';
+  if (ext === '.py') lang = 'python';
+  else if (ext === '.cpp') lang = 'cpp';
+  else if (ext === '.c') lang = 'c';
+  else if (ext === '.go') lang = 'go';
 
   try {
     // 1. Parse AST
-    const ast = CSharpParser.parse(code);
+    const ast = LangParsers.parse(code, lang);
     if (!ast || !ast.statements) {
       throw new Error('AST empty or failed to parse statements');
     }
@@ -85,7 +95,7 @@ files.forEach(file => {
     }
 
     // Save test artifacts
-    const baseName = path.basename(file, '.cs');
+    const baseName = path.basename(file, ext);
     fs.writeFileSync(path.join(OUTPUT_DIR, baseName + '.svg'), svg, 'utf8');
     fs.writeFileSync(path.join(OUTPUT_DIR, baseName + '.vsdx'), Buffer.from(vsdx.bytes));
 

@@ -42,28 +42,69 @@
       padding: 4px 10px;
       cursor: pointer;
       margin-left: 10px;
+    .lang-select {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--panel-2);
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 4px 10px;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    .theme-toggle {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+      background: transparent;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      transition: all .2s ease;
+    }
+    .theme-toggle:hover {
+      background: var(--panel-2);
+      transform: translateY(-1px);
     }
   </style>
 </head>
 <body>
   <header class="top">
-    <div class="eyebrow">ГОСТ 19.701–90 · ЕСПД · ISO 5807 · C# FLOWCHART SUITE</div>
-    <h1>Генератор блок-схем <span class="num">по языку программирования C#</span> <span class="csharp-badge">C# 13 / .NET</span></h1>
+    <div class="eyebrow">ГОСТ 19.701–90 · ЕСПД · ISO 5807 · MULTI-LANGUAGE FLOWCHART SUITE</div>
+    <h1>Генератор блок-схем <span class="num">по коду программ</span> <span class="csharp-badge" id="langBadge">C# · Python · C++ · C · Go</span></h1>
     <nav class="tabs" id="tabs">
       <button class="tab active" data-tab="gen" type="button">Генератор</button>
       <button class="tab" data-tab="faq" type="button">Правила ГОСТ / FAQ</button>
       <button class="tab" data-tab="examples" type="button">Примеры алгоритмов</button>
       <button class="tab" data-tab="figures" type="button">Фигуры ГОСТ</button>
+      <button id="themeToggle" class="theme-toggle" type="button" title="Переключить тему оформления (Светлая / Тёмная)">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">Тёмная тема</span>
+      </button>
     </nav>
   </header>
 
   <!-- TAB 1: GENERATOR -->
   <div class="tabpage active" id="tab-gen">
     <main>
-      <!-- LEFT: C# CODE EDITOR -->
+      <!-- LEFT: CODE EDITOR -->
       <section class="panel editor">
         <div class="panel-head">
           <h2 class="panel-label"><span class="pip"></span>Исходный код · <span id="srcLangLabel">C#</span></h2>
+          <select id="langSelect" class="lang-select" title="Выберите язык программирования">
+            <option value="csharp" selected>C# (C-Sharp)</option>
+            <option value="python">Python</option>
+            <option value="cpp">C++</option>
+            <option value="c">C (ANSI / C99)</option>
+            <option value="go">Go (Golang)</option>
+          </select>
           <select id="methodSelect" class="method-select" title="Выберите метод для построения схемы" style="display:none;"></select>
           <div class="spacer"></div>
           <div class="tool-group" role="group" aria-label="Масштаб кода">
@@ -75,7 +116,7 @@
         <div class="editor-wrap">
           <div id="lineHl"></div>
           <div class="gutter" id="gutter">1</div>
-          <textarea id="code" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="// введите код алгоритма на C#..."></textarea>
+          <textarea id="code" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="// введите исходный код программы..."></textarea>
         </div>
         <div class="editor-toolbar">
           <span class="unlimited-badge">● Полный ГОСТ 19.701-90 · Без ограничений</span>
@@ -209,6 +250,7 @@
   <script src="static/js/csharp-examples.js"></script>
   <script src="static/js/csharp-lexer.js"></script>
   <script src="static/js/csharp-parser.js"></script>
+  <script src="static/js/lang-parsers.js"></script>
   <script src="static/js/cfg-builder.js"></script>
   <script src="static/js/gost-layout.js"></script>
   <script src="static/js/gost-renderer.js"></script>

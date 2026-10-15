@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const CSharpParser = require('./static/js/csharp-parser');
+const LangParsers = require('./static/js/lang-parsers');
 const CFGBuilder = require('./static/js/cfg-builder');
 const GOSTLayout = require('./static/js/gost-layout');
 const GOSTRenderer = require('./static/js/gost-renderer');
@@ -14,16 +14,18 @@ function printUsage() {
 Использование: gost-flowchart [опции]
 
 Опции:
-  -i, --input <путь>      Входной файл C# (.cs) (обязательно)
+  -i, --input <путь>      Входной файл с кодом (.cs, .py, .cpp, .c, .go) (обязательно)
   -o, --output <путь>     Выходной файл (.svg или .vsdx) (по умолчанию: <имя>.svg)
-  -m, --method <имя>      Имя метода для визуализации (по умолчанию: Main или первый)
+  -l, --lang <язык>       Язык программирования: csharp, python, cpp, c, go (по умолчанию: определяется по расширению)
+  -m, --method <имя>      Имя метода/функции для визуализации (по умолчанию: Main или первый найденный)
   -f, --format <тип>      Формат: svg, vsdx, json (по умолчанию определяется по расширению -o)
   -h, --help              Показать эту справку
 
 Примеры:
   node cli.js -i Program.cs -o Program.svg
-  node cli.js -i Factorial.cs -o Factorial.vsdx
-  node cli.js -i Lab1.cs -m CalculateSeries -o Lab1.svg
+  node cli.js -i algorithm.py -o algorithm.svg
+  node cli.js -i solution.cpp -o solution.vsdx
+  node cli.js -i main.go -o main.svg
 `);
 }
 
@@ -33,7 +35,8 @@ function parseArgs() {
     input: null,
     output: null,
     method: null,
-    format: null
+    format: null,
+    lang: null
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -45,6 +48,8 @@ function parseArgs() {
       options.input = args[++i];
     } else if (arg === '-o' || arg === '--output') {
       options.output = args[++i];
+    } else if (arg === '-l' || arg === '--lang') {
+      options.lang = args[++i].toLowerCase();
     } else if (arg === '-m' || arg === '--method') {
       options.method = args[++i];
     } else if (arg === '-f' || arg === '--format') {
@@ -61,7 +66,7 @@ function main() {
   const options = parseArgs();
 
   if (!options.input) {
-    console.error('Ошибка: не указан входной файл. Используйте -i <файл.cs>');
+    console.error('Ошибка: не указан входной файл. Используйте -i <файл>');
     printUsage();
     process.exit(1);
   }
@@ -73,12 +78,23 @@ function main() {
 
   const code = fs.readFileSync(options.input, 'utf8');
 
+  // Detect language
+  let lang = options.lang;
+  if (!lang) {
+    const ext = path.extname(options.input).toLowerCase();
+    if (ext === '.py') lang = 'python';
+    else if (ext === '.cpp' || ext === '.cc' || ext === '.cxx' || ext === '.hpp') lang = 'cpp';
+    else if (ext === '.c' || ext === '.h') lang = 'c';
+    else if (ext === '.go') lang = 'go';
+    else lang = 'csharp';
+  }
+
   // Parse AST
   let ast;
   try {
-    ast = CSharpParser.parse(code);
+    ast = LangParsers.parse(code, lang);
   } catch (err) {
-    console.error(`Ошибка парсинга C#: ${err.message}`);
+    console.error(`Ошибка парсинга (${lang}): ${err.message}`);
     process.exit(1);
   }
 

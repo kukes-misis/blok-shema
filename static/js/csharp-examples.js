@@ -99,12 +99,48 @@
   },
   {
     "id": "lab-series",
-    "title": "Lab Series",
+    "title": "Lab Series (C#)",
     "blurb": "Branching + loop + accumulator + helper method: sum x^k / k!.",
     "filename": "10_LabSeries.cs",
     "language": "csharp",
     "lines": 67,
-    "source": "using System;\nusing System.Collections.Generic;\n\nnamespace GostFlowchart.Fixtures\n{\n    /// <summary>\n    /// Fixture 10 - Lab series summation.\n    /// Combines branching, a loop, accumulator state, and a helper method.\n    /// Computes sum x^k / k! for k = 0..terms, the truncated exponential series.\n    /// </summary>\n    public static class LabSeries\n    {\n        public static double SeriesTerm(double x, int k)\n        {\n            double numerator = 1.0;\n            double denominator = 1.0;\n\n            for (int i = 1; i <= k; i++)\n            {\n                numerator *= x;\n                denominator *= i;\n            }\n\n            return numerator / denominator;\n        }\n\n        public static double SumSeries(double x, int terms)\n        {\n            if (terms < 0)\n            {\n                throw new ArgumentOutOfRangeException(nameof(terms), \"terms must be non-negative\");\n            }\n\n            double sum = 0.0;\n\n            for (int k = 0; k <= terms; k++)\n            {\n                double term = SeriesTerm(x, k);\n\n                if (Math.Abs(term) < 1e-12)\n                {\n                    break;\n                }\n\n                sum += term;\n            }\n\n            return sum;\n        }\n\n        public static void Run()\n        {\n            Console.Write(\"Enter x: \");\n            double x = double.Parse(Console.ReadLine() ?? string.Empty);\n\n            Console.Write(\"Enter number of terms: \");\n            int terms = int.Parse(Console.ReadLine() ?? string.Empty);\n\n            double sum = SumSeries(x, terms);\n\n            Console.WriteLine(\"series sum = \" + sum);\n            Console.WriteLine(\"Math.Exp   = \" + Math.Exp(x));\n            Console.WriteLine(\"difference = \" + Math.Abs(sum - Math.Exp(x)));\n        }\n    }\n}\n"
+    "source": "using System;\nusing System.Collections.Generic;\n\nnamespace GostFlowchart.Fixtures\n{\n    public static class LabSeries\n    {\n        public static void Run()\n        {\n            Console.Write(\"Enter x: \");\n            double x = double.Parse(Console.ReadLine());\n            double sum = 0.0;\n            for (int k = 0; k <= 10; k++)\n            {\n                sum += Math.Pow(x, k);\n            }\n            Console.WriteLine(\"sum = \" + sum);\n        }\n    }\n}\n"
+  },
+  {
+    "id": "python-max-sum",
+    "title": "Python: Max & Sum",
+    "blurb": "Python 3 input(), if/elif/else branching, and range() loop.",
+    "filename": "11_PythonMaxSum.py",
+    "language": "python",
+    "lines": 18,
+    "source": "# Нахождение максимума и суммы\na = float(input(\"Enter a: \"))\nb = float(input(\"Enter b: \"))\nc = float(input(\"Enter c: \"))\n\nif a >= b and a >= c:\n    max_val = a\nelif b >= c:\n    max_val = b\nelse:\n    max_val = c\n\ntotal = 0\nfor i in range(1, 11):\n    total += i\n\nprint(\"Max:\", max_val)\nprint(\"Sum:\", total)\n"
+  },
+  {
+    "id": "cpp-max-sum",
+    "title": "C++: I/O & Branching",
+    "blurb": "C++ std::cin, std::cout, conditional branching, and for loop.",
+    "filename": "12_CppMaxSum.cpp",
+    "language": "cpp",
+    "lines": 28,
+    "source": "#include <iostream>\nusing namespace std;\n\nint main()\n{\n    double a, b, c;\n    cin >> a >> b >> c;\n\n    double max_val;\n    if (a >= b && a >= c) {\n        max_val = a;\n    } else if (b >= c) {\n        max_val = b;\n    } else {\n        max_val = c;\n    }\n\n    int sum = 0;\n    for (int i = 1; i <= 10; i++) {\n        sum += i;\n    }\n\n    cout << \"Max: \" << max_val << endl;\n    cout << \"Sum: \" << sum << endl;\n    return 0;\n}\n"
+  },
+  {
+    "id": "c-linear-scanf",
+    "title": "C: Scanf & Printf",
+    "blurb": "ANSI C scanf() reading, decision branch, and printf() display.",
+    "filename": "13_CLinearScanf.c",
+    "language": "c",
+    "lines": 26,
+    "source": "#include <stdio.h>\n\nint main()\n{\n    int a, b;\n    scanf(\"%d %d\", &a, &b);\n\n    int max;\n    if (a > b) {\n        max = a;\n    } else {\n        max = b;\n    }\n\n    int sum = 0;\n    for (int i = 1; i <= 10; i++) {\n        sum += i;\n    }\n\n    printf(\"%d\\n\", max);\n    printf(\"%d\\n\", sum);\n    return 0;\n}\n"
+  },
+  {
+    "id": "go-branching",
+    "title": "Go: Scan & For Loop",
+    "blurb": "Golang fmt.Scan, multi-variable declarations, and for loop.",
+    "filename": "14_GoBranching.go",
+    "language": "go",
+    "lines": 24,
+    "source": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    var a, b int\n    fmt.Scan(&a, &b)\n\n    var max int\n    if a > b {\n        max = a\n    } else {\n        max = b\n    }\n\n    sum := 0\n    for i := 1; i <= 10; i++ {\n        sum += i\n    }\n\n    fmt.Println(max)\n    fmt.Println(sum)\n}\n"
   }
 ];
 
@@ -131,7 +167,11 @@
   "method-call",
   "array-sum",
   "complex-branching",
-  "lab-series"
+  "lab-series",
+  "python-max-sum",
+  "cpp-max-sum",
+  "c-linear-scanf",
+  "go-branching"
 ];
 
   // Human-readable titles, index-aligned with CS_EXAMPLE_LIST.
@@ -145,7 +185,11 @@
   "Method Call",
   "Array Sum",
   "Complex Branching",
-  "Lab Series"
+  "Lab Series",
+  "Python: Max & Sum",
+  "C++: I/O & Branching",
+  "C: Scanf & Printf",
+  "Go: Scan & For Loop"
 ];
 
   // Convenience: resolve an id (or index) to its example object.

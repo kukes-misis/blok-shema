@@ -25,6 +25,14 @@
   var codeZoomIn = $('codeZoomIn');
   var codeZoomOut = $('codeZoomOut');
   var codeZoomRead = $('codeZoomRead');
+  var themeToggle = $('themeToggle');
+  var themeIcon = $('themeIcon');
+  var themeLabel = $('themeLabel');
+  var langSelect = $('langSelect');
+  var langBadge = $('langBadge');
+  var srcLangLabel = $('srcLangLabel');
+
+  var currentLang = 'csharp';
 
   var scale = 1.0;
   var natW = 800;
@@ -178,7 +186,7 @@
 
     var src = code.value.trim();
     if (!src) {
-      showError('Введите исходный код на C# для построения схемы.');
+      showError('Введите исходный код для построения схемы.');
       return;
     }
 
@@ -187,7 +195,12 @@
 
     try {
       // 1. Parse AST
-      currentAST = window.CSharpParser.parse(src);
+      var lang = (langSelect && langSelect.value) ? langSelect.value : currentLang;
+      if (window.LangParsers && typeof window.LangParsers.parse === 'function') {
+        currentAST = window.LangParsers.parse(src, lang);
+      } else {
+        currentAST = window.CSharpParser.parse(src);
+      }
 
       // 2. Populate method selector if multiple methods exist
       updateMethodSelector();
@@ -619,6 +632,14 @@
       `;
 
       card.addEventListener('click', function () {
+        var exLang = item.language || (exData[item.id] ? exData[item.id].language : 'csharp');
+        if (exLang && langSelect) {
+          langSelect.value = exLang;
+          currentLang = exLang;
+          var info = LANG_INFO[currentLang] || { name: currentLang, badge: currentLang };
+          if (srcLangLabel) srcLangLabel.textContent = info.name;
+          if (langBadge) langBadge.textContent = info.badge;
+        }
         code.value = srcCode;
         updateGutter();
         $('tabs').querySelector('[data-tab="gen"]').click();
@@ -708,8 +729,9 @@
     });
   }
 
-  // Initial starter code
-  var DEFAULT_CS_CODE = `using System;
+  // Language templates
+  var TEMPLATES = {
+    csharp: `using System;
 
 class Program
 {
@@ -740,10 +762,173 @@ class Program
 
         Console.WriteLine("Max: " + max);
     }
-}`;
+}`,
+
+    python: `# Нахождение максимума трех чисел и суммы ряда
+a = float(input("Enter a: "))
+b = float(input("Enter b: "))
+c = float(input("Enter c: "))
+
+if a >= b and a >= c:
+    max_val = a
+elif b >= c:
+    max_val = b
+else:
+    max_val = c
+
+total = 0
+for i in range(1, 11):
+    total += i
+
+print("Max:", max_val)
+print("Sum 1..10:", total)`,
+
+    cpp: `#include <iostream>
+using namespace std;
+
+int main()
+{
+    double a, b, c;
+    cin >> a >> b >> c;
+
+    double max_val;
+    if (a >= b && a >= c) {
+        max_val = a;
+    } else if (b >= c) {
+        max_val = b;
+    } else {
+        max_val = c;
+    }
+
+    int sum = 0;
+    for (int i = 1; i <= 10; i++) {
+        sum += i;
+    }
+
+    cout << "Max: " << max_val << endl;
+    cout << "Sum: " << sum << endl;
+    return 0;
+}`,
+
+    c: `#include <stdio.h>
+
+int main()
+{
+    int a, b;
+    scanf("%d %d", &a, &b);
+
+    int max;
+    if (a > b) {
+        max = a;
+    } else {
+        max = b;
+    }
+
+    int sum = 0;
+    for (int i = 1; i <= 10; i++) {
+        sum += i;
+    }
+
+    printf("%d\\n", max);
+    printf("%d\\n", sum);
+    return 0;
+}`,
+
+    go: `package main
+
+import "fmt"
+
+func main() {
+    var a, b int
+    fmt.Scan(&a, &b)
+
+    var max int
+    if a > b {
+        max = a
+    } else {
+        max = b
+    }
+
+    sum := 0
+    for i := 1; i <= 10; i++ {
+        sum += i
+    }
+
+    fmt.Println(max)
+    fmt.Println(sum)
+}`
+  };
+
+  var userCodes = {
+    csharp: TEMPLATES.csharp,
+    python: TEMPLATES.python,
+    cpp: TEMPLATES.cpp,
+    c: TEMPLATES.c,
+    go: TEMPLATES.go
+  };
+
+  var LANG_INFO = {
+    csharp: { name: 'C#', badge: 'C# 13 / .NET' },
+    python: { name: 'Python', badge: 'Python 3' },
+    cpp: { name: 'C++', badge: 'C++ 20 / ISO' },
+    c: { name: 'C', badge: 'C (ANSI / C99)' },
+    go: { name: 'Go', badge: 'Go 1.22' }
+  };
+
+  if (langSelect) {
+    langSelect.addEventListener('change', function () {
+      // Save current code
+      userCodes[currentLang] = code.value;
+
+      currentLang = langSelect.value;
+      var info = LANG_INFO[currentLang] || { name: currentLang, badge: currentLang };
+
+      if (srcLangLabel) srcLangLabel.textContent = info.name;
+      if (langBadge) langBadge.textContent = info.badge;
+
+      // Switch editor code
+      code.value = userCodes[currentLang] || TEMPLATES[currentLang] || '';
+      updateGutter();
+      buildFlowchart(true);
+      toast('Язык: ' + info.name, 'Шаблон загружен, схема перестроена по ГОСТ');
+    });
+  }
+
+  // 11. Dark / Light Theme Switching
+  function setTheme(isDark) {
+    if (isDark) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (themeIcon) themeIcon.textContent = '☀️';
+      if (themeLabel) themeLabel.textContent = 'Светлая тема';
+      localStorage.setItem('gost_theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      if (themeIcon) themeIcon.textContent = '🌙';
+      if (themeLabel) themeLabel.textContent = 'Тёмная тема';
+      localStorage.setItem('gost_theme', 'light');
+    }
+  }
+
+  function initTheme() {
+    var saved = localStorage.getItem('gost_theme');
+    if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setTheme(true);
+    } else {
+      setTheme(false);
+    }
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      setTheme(!isDark);
+      toast('Тема переключена', !isDark ? 'Тёмная тема оформления включена' : 'Светлая тема оформления включена');
+    });
+  }
 
   // Initialize
-  code.value = DEFAULT_CS_CODE;
+  initTheme();
+  code.value = TEMPLATES.csharp;
   updateGutter();
   buildFlowchart(true);
 
@@ -751,7 +936,14 @@ class Program
   window.app = {
     build: buildFlowchart,
     fit: fitToWindow,
-    toast: toast
+    toast: toast,
+    setTheme: setTheme,
+    setLanguage: function (lang) {
+      if (langSelect && LANG_INFO[lang]) {
+        langSelect.value = lang;
+        langSelect.dispatchEvent(new Event('change'));
+      }
+    }
   };
 
 })();

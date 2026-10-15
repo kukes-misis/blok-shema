@@ -942,3 +942,128 @@ textarea.ed-inp { resize: vertical; min-height: 32px; line-height: 1.35; }
 .edh.lbl { fill: #1f6feb; stroke: #ffffff; stroke-width: 1.5; cursor: move; }
 .algn { stroke: #2ea043; stroke-width: 1.5; stroke-dasharray: 6 5; pointer-events: none; }
 .marquee { fill: rgba(31, 111, 235, 0.12); stroke: #1f6feb; stroke-width: 1; stroke-dasharray: 5 4; pointer-events: none; }
+
+/* === DARK THEME (ГОСТ 19.701-90) === */
+[data-theme="dark"] {
+  --paper-bg: #0d1117;
+  --panel: #161b22;
+  --panel-2: #21262d;
+  --sheet: #161b22;
+  --ink: #f0f6fc;
+  --ink-soft: #8b949e;
+  --ink-mute: #6e7681;
+  --ink-faint: #484f58;
+  --line: #30363d;
+  --line-strong: #3d444d;
+  --accent: #58a6ff;
+  --accent-2: #1f6feb;
+  --accent-soft: rgba(56, 139, 253, 0.15);
+  --grid: rgba(56, 139, 253, 0.08);
+  --sheet-ink: #f0f6fc;
+  --sheet-accent: #58a6ff;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--paper-bg);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .editor-wrap {
+  background: #0d1117 !important;
+}
+
+[data-theme="dark"] #code {
+  color: #f0f6fc !important;
+}
+
+[data-theme="dark"] .gutter {
+  background: #161b22 !important;
+  color: #6e7681 !important;
+  border-right-color: #30363d !important;
+}
+
+[data-theme="dark"] .sh {
+  fill: #161b22 !important;
+  stroke: #e6edf3 !important;
+}
+
+[data-theme="dark"] .ln,
+[data-theme="dark"] .edge {
+  stroke: #e6edf3 !important;
+}
+
+[data-theme="dark"] .tx,
+[data-theme="dark"] .elbl,
+[data-theme="dark"] .title {
+  fill: #f0f6fc !important;
+}
+
+[data-theme="dark"] marker#arr path {
+  fill: #f0f6fc !important;
+}
+
+[data-theme="dark"] .sheet rect[fill="var(--paper,#fff)"],
+[data-theme="dark"] .sheet rect[fill="#ffffff"],
+[data-theme="dark"] .sheet rect[fill="#fff"] {
+  fill: #161b22 !important;
+}
+
+[data-theme="dark"] .tool-group,
+[data-theme="dark"] .tool-group button,
+[data-theme="dark"] .tool-group input {
+  background: #21262d !important;
+  color: #f0f6fc !important;
+  border-color: #3d444d !important;
+}
+
+[data-theme="dark"] .tool-group button:hover {
+  background: #30363d !important;
+}
+
+[data-theme="dark"] .btn-ghost {
+  background: #21262d !important;
+  color: #f0f6fc !important;
+  border-color: #3d444d !important;
+}
+
+[data-theme="dark"] .btn-ghost:hover {
+  background: #30363d !important;
+  border-color: #8b949e !important;
+}
+
+[data-theme="dark"] select.ex,
+[data-theme="dark"] .method-select,
+[data-theme="dark"] select {
+  background: #21262d !important;
+  color: #f0f6fc !important;
+  border-color: #3d444d !important;
+}
+
+[data-theme="dark"] .qa,
+[data-theme="dark"] .ex-card,
+[data-theme="dark"] .leg-card {
+  background: #161b22 !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .ex-card:hover {
+  background: #21262d !important;
+}
+
+[data-theme="dark"] #edbar {
+  background: #161b22 !important;
+  border-top-color: #30363d !important;
+}
+
+[data-theme="dark"] .ed-btn {
+  background: #21262d !important;
+  color: #f0f6fc !important;
+  border-color: #30363d !important;
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+  background: #21262d;
+  color: #f0f6fc;
+  border: 1.5px solid #3d444d;
+}
+
