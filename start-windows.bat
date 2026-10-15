@@ -1,10 +1,11 @@
 @echo off
 chcp 65001 >nul
-title C# GOST Flowchart Server
+title Блок-Схемы ГОСТ (Python, C++, C#, C, Go)
 cd /d "%~dp0"
 
 echo ======================================================
-echo   Генератор блок-схем C# по ГОСТ 19.701-90 (Windows)
+echo   Генератор блок-схем по ГОСТ 19.701-90 (Windows)
+echo   Поддержка: Python, C++, C#, ANSI C, Go (Golang)
 echo ======================================================
 echo.
 

@@ -1,9 +1,10 @@
 {
-  "name": "csharp-gost-flowchart",
+  "name": "blok-shema",
   "version": "1.0.0",
-  "description": "Автономный генератор блок-схем по алгоритмам на языке C# по ГОСТ 19.701-90 (ИСО 5807-85)",
+  "description": "Автономный генератор блок-схем по алгоритмам на языках Python, C++, C#, C, Go по ГОСТ 19.701-90 (ИСО 5807-85)",
   "main": "cli.js",
   "bin": {
+    "blok-shema": "./cli.js",
     "gost-flowchart": "./cli.js"
   },
   "scripts": {
@@ -12,9 +13,13 @@
     "cli": "node cli.js"
   },
   "keywords": [
-    "csharp",
-    "gost",
+    "blok-shema",
     "flowchart",
+    "gost",
+    "python",
+    "cpp",
+    "csharp",
+    "golang",
     "diagram",
     "visio",
     "svg",

@@ -1,7 +1,7 @@
-# Flowchart Generator — ГОСТ 19.701-90 (csharp-gost-flowchart)
+# Блок-Схема (blok-shema) — Генератор блок-схем по ГОСТ 19.701-90
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Languages-C%23%20%7C%20Python%20%7C%20C%2B%2B%20%7C%20C%20%7C%20Go-blueviolet?style=for-the-badge" alt="Multi-Language">
+  <img src="https://img.shields.io/badge/Languages-Python%20%7C%20C%2B%2B%20%7C%20C%23%20%7C%20C%20%7C%20Go-blueviolet?style=for-the-badge" alt="Multi-Language">
   <img src="https://img.shields.io/badge/Standard-ГОСТ%2019.701--90-blue?style=for-the-badge" alt="ГОСТ 19.701-90">
   <img src="https://img.shields.io/badge/Theme-Dark%20%26%20Light%20Mode-darkblue?style=for-the-badge" alt="Dark and Light Theme">
   <img src="https://img.shields.io/badge/Export-SVG%20%7C%20PNG%20%7C%20VSDX-success?style=for-the-badge" alt="Export Formats">
@@ -13,17 +13,17 @@
 
 ## 📌 О проекте
 
-**csharp-gost-flowchart** — профессиональный автономный комплекс для автоматического построения блок-схем алгоритмов по исходному коду программ со строгим соблюдением требований **ГОСТ 19.701-90 (ЕСПД / ИСО 5807-85)**.
+**blok-shema** — профессиональный автономный комплекс для автоматического построения блок-схем алгоритмов по исходному коду программ со строгим соблюдением требований **ГОСТ 19.701-90 (ЕСПД / ИСО 5807-85)**.
 
 Проект создан на основе реверс-инжиниринга сервиса [blok-shema.ru](https://blok-shema.ru/), но полностью устраняет все его ограничения:
 - **100% бесплатно и безлимитно**: никаких оплат, кредитов, подписок и авторизаций.
 - **Полная автономность**: работает локально в браузере и консоли без подключения к интернету.
-- **Мультиязычность**: поддержка **5 популярных языков программирования**:
+- **Мультиязычность**: поддержка **5 языков программирования**:
+  - **Python** (Python 3): `input()`, `print()`, отступы, `if/elif/else`, `while`, `for ... in range(...)` с автоматическим преобразованием в блок «Подготовка» (`i от a до b`);
+  - **C++** (ISO C++): `cin >> a >> b`, `cout << max << endl`, `getline`, стандартные управляющие конструкции;
   - **C#** (C# 13 / .NET): классы, методы, функции, top-level statements, `Console.ReadLine/WriteLine`, `for`, `while`, `do-while`, `foreach`, `if/else`, тернарные операторы;
-  - **Python** (Python 3): `input()`, `print()`, отступы, `if/elif/else`, `while`, `for ... in range(...)` с преобразованием в блок «Подготовка» (`i от a до b`);
-  - **C++** (ISO C++): `cin`, `cout`, `getline`, стандартные управляющие конструкции;
-  - **C** (ANSI C / C99): `scanf`, `printf`, функции, условия, циклы;
-  - **Go** (Golang): автоматическая расстановка точек с запятой (ASI), `var a, b int`, `:=`, `fmt.Scan`, `fmt.Println`, условия `if` без скобок, циклы `for`.
+  - **ANSI C / C99**: одиночные и составные `scanf("%d %d", &a, &b)`, `printf`, функции, условия, циклы;
+  - **Go** (Golang): автоматическая расстановка точек с запятой (ASI), `var a, b int`, короткие присваивания `:=`, `fmt.Scan`, `fmt.Println`, условия `if` без скобок, циклы `for`.
 - **Тёмная и светлая темы (Dark / Light Mode)**: стильное переключение темы оформления с сохранением в `localStorage` и поддержкой чертёжной темы ГОСТ.
 - **Встроенный интерактивный редактор**: ручное перемещение блоков (drag & drop), привязка к направляющим, координатная сетка, добавление/удаление блоков, история Undo/Redo.
 - **Экспорт в 3 формата**:
@@ -39,11 +39,11 @@
 
 | Версия / ОС | Ссылка на скачивание | Содержимое |
 |---|---|---|
-| 🪟 **Windows** | [⬇️ csharp-gost-flowchart-windows-v1.0.0.zip](https://github.com/kukes-misis/csharp-gost-flowchart/releases/download/v1.0.0/csharp-gost-flowchart-windows-v1.0.0.zip) | Ярлыки `start-windows.bat`, `open-offline-windows.bat`, веб-приложение, стили, скрипты |
-| 🍎 **macOS** | [⬇️ csharp-gost-flowchart-macos-v1.0.0.zip](https://github.com/kukes-misis/csharp-gost-flowchart/releases/download/v1.0.0/csharp-gost-flowchart-macos-v1.0.0.zip) | Ярлыки `start-macos.command`, `open-offline-macos.command`, веб-приложение, стили, скрипты |
-| 🌐 **Универсальная (Portable)** | [⬇️ csharp-gost-flowchart-portable-all-v1.0.0.zip](https://github.com/kukes-misis/csharp-gost-flowchart/releases/download/v1.0.0/csharp-gost-flowchart-portable-all-v1.0.0.zip) | Все платформы, тесты, консольный CLI `cli.js`, сервер `server.js` |
+| 🪟 **Windows** | [⬇️ **blok-shema-windows-v1.0.0.zip**](https://github.com/kukes-misis/blok-shema/releases/download/v1.0.0/blok-shema-windows-v1.0.0.zip) *(95 КБ)* | Ярлыки `start-windows.bat`, `open-offline-windows.bat`, веб-приложение, стили, скрипты, CLI |
+| 🍎 **macOS** | [⬇️ **blok-shema-macos-v1.0.0.zip**](https://github.com/kukes-misis/blok-shema/releases/download/v1.0.0/blok-shema-macos-v1.0.0.zip) *(95 КБ)* | Ярлыки `start-macos.command`, `open-offline-macos.command`, веб-приложение, стили, скрипты, CLI |
+| 🌐 **Универсальная (Portable)** | [⬇️ **blok-shema-portable-all-v1.0.0.zip**](https://github.com/kukes-misis/blok-shema/releases/download/v1.0.0/blok-shema-portable-all-v1.0.0.zip) *(98 КБ)* | Все платформы, тесты, консольный CLI `cli.js`, сервер `server.js` |
 
-*Все релизы и исходные файлы доступны на странице: [GitHub Releases v1.0.0](https://github.com/kukes-misis/csharp-gost-flowchart/releases/tag/v1.0.0)*.
+*Все релизы и исходные файлы доступны на странице: [GitHub Releases v1.0.0](https://github.com/kukes-misis/blok-shema/releases/tag/v1.0.0)*.
 
 ---
 
@@ -76,10 +76,7 @@
 Утилита командной строки позволяет в автоматическом режиме конвертировать файлы любого из поддерживаемых языков в блок-схемы (удобно для скриптов и автоматизации генерации отчетов):
 
 ```bash
-# Генерация векторной блок-схемы SVG для C#:
-node cli.js -i tests/fixtures/03_ForLoop.cs -o ForLoop.svg
-
-# Генерация блок-схемы для Python:
+# Генерация векторной блок-схемы SVG для Python:
 node cli.js -i tests/fixtures/11_PythonMaxSum.py -o PythonMaxSum.svg
 
 # Генерация схемы для C++ в формате Microsoft Visio (.vsdx):
@@ -91,14 +88,17 @@ node cli.js -i tests/fixtures/13_CLinearScanf.c -o CLinearScanf.svg
 # Генерация схемы для Go:
 node cli.js -i tests/fixtures/14_GoBranching.go -o GoBranching.svg
 
-# Явное указание языка программирования (если нестандартное расширение):
+# Генерация схемы для C#:
+node cli.js -i tests/fixtures/03_ForLoop.cs -o ForLoop.svg
+
+# Явное указание языка программирования (если нестандартное расширение файла):
 node cli.js -i snippet.txt -l python -o snippet.svg
 ```
 
 ### Параметры CLI:
 - `-i, --input <путь>` — входной файл с кодом (обязательный параметр).
 - `-o, --output <путь>` — выходной файл (`.svg`, `.vsdx` или `.json`).
-- `-l, --lang <язык>` — язык программирования: `csharp`, `python`, `cpp`, `c`, `go` (по умолчанию определяется по расширению файла).
+- `-l, --lang <язык>` — язык программирования: `python`, `cpp`, `csharp`, `c`, `go` (по умолчанию определяется по расширению файла).
 - `-m, --method <имя>` — выбор метода для визуализации (по умолчанию: `Main` или первый метод).
 - `-f, --format <тип>` — формат (`svg`, `vsdx`, `json`).
 - `-h, --help` — справка по командам.
@@ -111,7 +111,7 @@ node cli.js -i snippet.txt -l python -o snippet.svg
 |---|---|---|
 | **Пуск / Останов** | Скругленный прямоугольник ($r = h/2$) | Символ «Терминатор» для начала и конца алгоритма с именем метода. |
 | **Процесс** | Прямоугольник | Арифметические операции и присваивания. Последовательные операции объединяются в один компактный блок до 4 строк. |
-| **Данные (Ввод/Вывод)** | Параллелограмм со скосом граней | `Console.ReadLine()`, `cin`, `scanf`, `input()`, `fmt.Scan`. Текстовые подписи отсекаются, в блоке остаются чистые переменные. |
+| **Данные (Ввод/Вывод)** | Параллелограмм со скосом граней | `input()`, `cin`, `scanf`, `Console.ReadLine()`, `fmt.Scan`. Текстовые подписи отсекаются, в блоке остаются чистые переменные. |
 | **Решение** | Ромб | Условия `if`, `while`. Выходы: «Да» (вниз) и «Нет» (вправо). Ширина ромба масштабируется с запасом $\times 1.48$, чтобы текст гарантированно не выезжал за скосы. |
 | **Подготовка** | Вытянутый шестиугольник | Циклы со счетчиком `for` с надписью вида `i от 1 до n`. |
 | **Предопределенный процесс** | Прямоугольник с вертикальными полосами | Вызов сторонних методов, функций или процедур. |
@@ -159,7 +159,7 @@ node tests/run-tests.js
 ## 📂 Структура репозитория
 
 ```
-csharp-gost-flowchart/
+blok-shema/
 ├── index.html                     # Главное одностраничное веб-приложение (с поддержкой темной темы)
 ├── start-windows.bat              # Ярлык запуска для Windows
 ├── open-offline-windows.bat       # Автономный ярлык для Windows
@@ -176,16 +176,18 @@ csharp-gost-flowchart/
 │   └── js/
 │       ├── csharp-lexer.js        # Лексический анализатор C#
 │       ├── csharp-parser.js       # Синтаксический анализатор C# AST
-│       ├── lang-parsers.js        # Мультиязычный парсер (C#, Python, C++, C, Go)
+│       ├── lang-parsers.js        # Мультиязычный парсер (Python, C++, C#, C, Go)
 │       ├── cfg-builder.js         # Построитель графа управления (CFG)
 │       ├── gost-layout.js         # Движок ортогональной ГОСТ-раскладки
 │       ├── gost-renderer.js       # Генератор SVG и сборщик архивов Visio VSDX
 │       ├── diagram-editor.js      # Визуальный редактор с drag-and-drop
 │       ├── csharp-examples.js     # База примеров алгоритмов
 │       └── app.js                 # Основной контроллер приложения (управление темами и языками)
+├── scripts/
+│   └── create-release.js          # Скрипт публикации релизов на GitHub
 └── tests/
     ├── run-tests.js               # Тестовый раннер
-    ├── fixtures/                  # 14 файлов эталонных алгоритмов (C#, Python, C++, C, Go)
+    ├── fixtures/                  # 14 файлов эталонных алгоритмов (Python, C++, C#, C, Go)
     └── output/                    # Сгенерированные SVG и VSDX схемы
 ```
 

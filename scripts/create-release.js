@@ -24,17 +24,17 @@ if (!token) {
 }
 
 const REPO_OWNER = 'kukes-misis';
-const REPO_NAME = 'csharp-gost-flowchart';
+const REPO_NAME = 'blok-shema';
 const TAG = 'v1.0.0';
 
-const RELEASE_BODY = `# Релиз v1.0.0 — Генератор блок-схем по ГОСТ 19.701-90
+const RELEASE_BODY = `# Релиз v1.0.0 — Генератор блок-схем по ГОСТ 19.701-90 (blok-shema)
 
-Полностью автономный, бесплатный генератор блок-схем алгоритмов по ГОСТ 19.701-90 (ИСО 5807-85) с визуальным редактором, тёмной темой и поддержкой 5 языков программирования.
+Полностью автономный, бесплатный генератор блок-схем алгоритмов по ГОСТ 19.701-90 (ИСО 5807-85) с визуальным редактором, тёмной темой и поддержкой 5 языков программирования (Python, C++, C#, C, Go).
 
 ### 📦 Скачать готовые архивы для запуска:
-- **[csharp-gost-flowchart-windows-v1.0.0.zip](https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${TAG}/csharp-gost-flowchart-windows-v1.0.0.zip)** (95 КБ) — сборка для **Windows** с ярлыками запуска в 1 клик (\`start-windows.bat\` и \`open-offline-windows.bat\`).
-- **[csharp-gost-flowchart-macos-v1.0.0.zip](https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${TAG}/csharp-gost-flowchart-macos-v1.0.0.zip)** (95 КБ) — сборка для **macOS** с ярлыками запуска в 1 клик (\`start-macos.command\` и \`open-offline-macos.command\`).
-- **[csharp-gost-flowchart-portable-all-v1.0.0.zip](https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${TAG}/csharp-gost-flowchart-portable-all-v1.0.0.zip)** (97 КБ) — универсальная **Portable** сборка для всех операционных систем со всеми тестами.
+- **[blok-shema-windows-v1.0.0.zip](https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${TAG}/blok-shema-windows-v1.0.0.zip)** (95 КБ) — сборка для **Windows** с ярлыками запуска в 1 клик (\`start-windows.bat\` и \`open-offline-windows.bat\`).
+- **[blok-shema-macos-v1.0.0.zip](https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${TAG}/blok-shema-macos-v1.0.0.zip)** (95 КБ) — сборка для **macOS** с ярлыками запуска в 1 клик (\`start-macos.command\` и \`open-offline-macos.command\`).
+- **[blok-shema-portable-all-v1.0.0.zip](https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/${TAG}/blok-shema-portable-all-v1.0.0.zip)** (98 КБ) — универсальная **Portable** сборка для всех операционных систем со всеми тестами.
 
 ---
 
@@ -45,9 +45,9 @@ const RELEASE_BODY = `# Релиз v1.0.0 — Генератор блок-схе
   - **Стрелки ставятся только** на линиях обратной связи (снизу вверх) и против основного потока;
   - Ортогональная трассировка без пересечений (левый канал возврата, правый канал выхода).
 - **Поддержка 5 языков программирования**:
-  - **C#** (C# 13 / .NET)
   - **Python** (Python 3)
   - **C++** (ISO C++)
+  - **C#** (C# 13 / .NET)
   - **ANSI C** (C99)
   - **Go** (Golang)
 - **🌙 Тёмная тема** и **☀️ Светлая тема** оформления с автосохранением в браузере.
@@ -164,11 +164,26 @@ async function main() {
     }
   }
 
+  // Update release description if exists
+  await apiRequest({
+    hostname: 'api.github.com',
+    path: `/repos/${REPO_OWNER}/${REPO_NAME}/releases/${release.id}`,
+    method: 'PATCH',
+    headers: {
+      'User-Agent': 'Gost-Flowchart-Publisher',
+      'Authorization': 'token ' + token,
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(releasePayload)
+    }
+  }, releasePayload);
+  console.log('✔ Описание релиза успешно обновлено!');
+
   // 2. Upload assets
   const filesToUpload = [
-    { name: `csharp-gost-flowchart-windows-${TAG}.zip`, path: `/tmp/gost-release-build/csharp-gost-flowchart-windows-${TAG}.zip` },
-    { name: `csharp-gost-flowchart-macos-${TAG}.zip`, path: `/tmp/gost-release-build/csharp-gost-flowchart-macos-${TAG}.zip` },
-    { name: `csharp-gost-flowchart-portable-all-${TAG}.zip`, path: `/tmp/gost-release-build/csharp-gost-flowchart-portable-all-${TAG}.zip` }
+    { name: `blok-shema-windows-${TAG}.zip`, path: `/tmp/gost-release-build/blok-shema-windows-${TAG}.zip` },
+    { name: `blok-shema-macos-${TAG}.zip`, path: `/tmp/gost-release-build/blok-shema-macos-${TAG}.zip` },
+    { name: `blok-shema-portable-all-${TAG}.zip`, path: `/tmp/gost-release-build/blok-shema-portable-all-${TAG}.zip` }
   ];
 
   for (const item of filesToUpload) {
