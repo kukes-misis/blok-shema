@@ -1146,3 +1146,139 @@ textarea.ed-inp { resize: vertical; min-height: 32px; line-height: 1.35; }
   border: 1.5px solid #3d444d;
 }
 
+/* ======================================================
+   MOTION DESIGN & FLUID ANIMATIONS
+   ====================================================== */
+
+/* Smooth Tab Entrance */
+@keyframes tabFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tabpage.active {
+  animation: tabFadeUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Blueprint laser scanning pulse while drafting */
+@keyframes blueprintScan {
+  0% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 0 rgba(37, 71, 255, 0));
+  }
+  50% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 16px rgba(37, 71, 255, 0.35));
+  }
+  100% {
+    opacity: 0.45;
+    filter: drop-shadow(0 0 0 rgba(37, 71, 255, 0));
+  }
+}
+
+.sheet-scroll.drafting .sheet {
+  animation: blueprintScan 0.95s infinite ease-in-out !important;
+}
+
+/* SVG Flowchart Elements Entrance Motion */
+@keyframes gostBlockEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sheet svg > .sh,
+.sheet svg > .tx,
+.sheet svg > .edge,
+.sheet svg > .fig {
+  transform-origin: center center;
+  animation: gostBlockEntrance 0.38s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* Button & Interactive Spring Physics */
+button:active,
+.tab:active,
+.btn-build:active,
+.tool-btn:active,
+.theme-toggle-btn:active {
+  transform: scale(0.95) !important;
+  transition: transform 0.08s ease !important;
+}
+
+.tab {
+  transition: all 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+.tab:hover {
+  transform: translateY(-1px);
+}
+
+.leg-card,
+.ex-card {
+  transition: transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1),
+              box-shadow 0.24s cubic-bezier(0.2, 0.9, 0.3, 1),
+              border-color 0.2s ease;
+}
+
+.leg-card:hover,
+.ex-card:hover {
+  transform: translateY(-3px) scale(1.008);
+  box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.12);
+}
+
+/* Badge Pulse Animation */
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 71, 255, 0.2); }
+  50% { box-shadow: 0 0 0 4px rgba(37, 71, 255, 0); }
+}
+
+.csharp-badge {
+  animation: badgeGlow 2.8s infinite ease-in-out;
+}
+
+/* ======================================================
+   TELEGRAM MINI APP (TMA) STYLES
+   ====================================================== */
+body.is-tma {
+  overscroll-behavior-y: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+body.is-tma header.top {
+  padding: 12px 16px 10px;
+}
+
+body.is-tma header.top h1 {
+  font-size: 20px;
+}
+
+body.is-tma .tabs {
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+body.is-tma .sheet-scroll {
+  padding-bottom: 84px; /* clearance for Telegram native MainButton */
+}
+
+@media (max-width: 640px) {
+  body.is-tma main {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+

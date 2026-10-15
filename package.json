@@ -9,7 +9,10 @@
   },
   "scripts": {
     "start": "node server.js",
+    "bot": "node bot.js",
+    "all": "node server.js --with-bot",
     "test": "node tests/run-tests.js",
+    "security-check": "node scripts/security-check.js",
     "cli": "node cli.js"
   },
   "keywords": [

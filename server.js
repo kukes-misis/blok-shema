@@ -1,12 +1,22 @@
-// server.js - Zero-dependency local HTTP server for C# GOST flowchart suite
+// server.js - Hardened HTTP Server & Telegram Mini App host for «Блок-Схема»
 'use strict';
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+const {
+  loadEnv,
+  sanitizeSVG,
+  redactToken
+} = require('./bot-security');
+
+// Load environment variables from .env
+loadEnv();
+
 const PORT = process.env.PORT || 8080;
 const ROOT = __dirname;
+const MAX_PAYLOAD_BYTES = 1024 * 1024; // 1MB payload limit
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -23,17 +33,25 @@ const MIME_TYPES = {
   '.ttf': 'font/ttf'
 };
 
-// Optional API build support
+// Flowchart generation core modules
 const LangParsers = require('./static/js/lang-parsers');
 const CFGBuilder = require('./static/js/cfg-builder');
 const GOSTLayout = require('./static/js/gost-layout');
 const GOSTRenderer = require('./static/js/gost-renderer');
 
 const server = http.createServer((req, res) => {
-  // CORS
+  // CORS & Security Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Telegram-Init-Data');
+
+  // Hardened Security Headers (Permitting Telegram Mini App iframes)
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self' 'unsafe-inline' https://telegram.org; frame-ancestors 'self' https://web.telegram.org https://*.telegram.org;"
+  );
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -44,20 +62,40 @@ const server = http.createServer((req, res) => {
   // API endpoint /api/build (for programmatic building)
   if (req.url === '/api/build' && req.method === 'POST') {
     let body = '';
-    req.on('data', chunk => { body += chunk; });
+    let bodySize = 0;
+
+    req.on('data', chunk => {
+      bodySize += chunk.length;
+      if (bodySize > MAX_PAYLOAD_BYTES) {
+        res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ error: 'Размер тела запроса превышает лимит (1 МБ)' }));
+        req.destroy();
+        return;
+      }
+      body += chunk;
+    });
+
     req.on('end', () => {
       try {
         const payload = JSON.parse(body);
         const code = payload.code || '';
         const lang = payload.lang || 'csharp';
+
+        if (code.length > 25000) {
+          res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+          res.end(JSON.stringify({ error: 'Код превышает допустимый лимит (25 КБ)' }));
+          return;
+        }
+
         const ast = LangParsers.parse(code, lang);
         const cfg = CFGBuilder.buildCFG(ast, { showMethodName: true });
         const model = GOSTLayout.layoutDiagram(cfg);
-        const svg = GOSTRenderer.renderModelSVG(model);
+        const rawSvg = GOSTRenderer.renderModelSVG(model);
+        const cleanSvg = sanitizeSVG(rawSvg);
 
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({
-          svg: svg,
+          svg: cleanSvg,
           width: model.width,
           height: model.height,
           model: model,
@@ -71,16 +109,23 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Static file serving
+  // Static file serving with strict path traversal protection
   let reqPath = decodeURIComponent(req.url.split('?')[0]);
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
 
   const filePath = path.normalize(path.join(ROOT, reqPath));
 
-  // Security check: ensure path is within ROOT
   if (!filePath.startsWith(ROOT)) {
-    res.writeHead(403);
-    res.end('Forbidden');
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('403 Forbidden');
+    return;
+  }
+
+  // Block direct serving of sensitive files (.env, secrets, logs)
+  const baseName = path.basename(filePath);
+  if (baseName.startsWith('.env') || baseName.includes('token') || baseName.includes('secret')) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('403 Forbidden');
     return;
   }
 
@@ -102,11 +147,27 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`
 ======================================================
-  C# ГОСТ 19.701-90 Flowchart Server
+  ГОСТ 19.701-90 Flowchart Server & Mini App
 ======================================================
-  Веб-приложение запущено: http://localhost:${PORT}
+  Веб-приложение (TMA):   http://localhost:${PORT}
   API эндпоинт:           http://localhost:${PORT}/api/build
   Каталог файлов:         ${ROOT}
+  Защита заголовков:      CSP + nosniff + 1MB payload limit
 ======================================================
 `);
+
+  // Optionally launch Telegram Bot alongside server
+  if (process.argv.includes('--with-bot') || process.env.START_BOT === 'true') {
+    try {
+      const { pollUpdates } = require('./bot.js');
+      console.log('🤖 Запуск Telegram-бота параллельно с сервером...');
+      pollUpdates().catch(botErr => {
+        console.error('Ошибка в цикле Telegram-бота:', botErr.message);
+      });
+    } catch (e) {
+      console.error('Не удалось запустить Telegram-бота:', e.message);
+    }
+  }
 });
+
+module.exports = server;
