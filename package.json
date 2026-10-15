@@ -1,0 +1,27 @@
+{
+  "name": "csharp-gost-flowchart",
+  "version": "1.0.0",
+  "description": "Автономный генератор блок-схем по алгоритмам на языке C# по ГОСТ 19.701-90 (ИСО 5807-85)",
+  "main": "cli.js",
+  "bin": {
+    "gost-flowchart": "./cli.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run-tests.js",
+    "cli": "node cli.js"
+  },
+  "keywords": [
+    "csharp",
+    "gost",
+    "flowchart",
+    "diagram",
+    "visio",
+    "svg",
+    "vsdx",
+    "гост-19-701-90",
+    "блок-схема"
+  ],
+  "author": "Antigravity & Claude Code",
+  "license": "MIT"
+}

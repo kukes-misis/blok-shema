@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Генератор блок-схем C# по ГОСТ 19.701-90 — Автономный онлайн редактор</title>
+  <meta name="description" content="Построение блок-схем алгоритмов по коду C# онлайн по ГОСТ 19.701-90. Автоматическая ортогональная раскладка, ручной редактор, экспорт в SVG, PNG и Microsoft Visio (.VSDX). Полностью бесплатно и без ограничений.">
+  <link rel="stylesheet" href="static/css/app.css">
+  <style>
+    /* Specific tweaks for C# generator */
+    .csharp-badge {
+      background: #7139a6;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: 8px;
+      letter-spacing: 0.05em;
+      vertical-align: middle;
+    }
+    .unlimited-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: #189a49;
+      background: #e6f7ec;
+      border: 1px solid #b7ebd0;
+      padding: 3px 8px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .method-select {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink);
+      background: #fff;
+      border: 1.5px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 4px 10px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="eyebrow">ГОСТ 19.701–90 · ЕСПД · ISO 5807 · C# FLOWCHART SUITE</div>
+    <h1>Генератор блок-схем <span class="num">по языку программирования C#</span> <span class="csharp-badge">C# 13 / .NET</span></h1>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="gen" type="button">Генератор</button>
+      <button class="tab" data-tab="faq" type="button">Правила ГОСТ / FAQ</button>
+      <button class="tab" data-tab="examples" type="button">Примеры алгоритмов</button>
+      <button class="tab" data-tab="figures" type="button">Фигуры ГОСТ</button>
+    </nav>
+  </header>
+
+  <!-- TAB 1: GENERATOR -->
+  <div class="tabpage active" id="tab-gen">
+    <main>
+      <!-- LEFT: C# CODE EDITOR -->
+      <section class="panel editor">
+        <div class="panel-head">
+          <h2 class="panel-label"><span class="pip"></span>Исходный код · <span id="srcLangLabel">C#</span></h2>
+          <select id="methodSelect" class="method-select" title="Выберите метод для построения схемы" style="display:none;"></select>
+          <div class="spacer"></div>
+          <div class="tool-group" role="group" aria-label="Масштаб кода">
+            <button id="codeZoomOut" title="Уменьшить шрифт кода">−</button>
+            <input class="zoom-read" id="codeZoomRead" type="text" inputmode="numeric" autocomplete="off" title="Масштаб шрифта кода" value="100%" readonly>
+            <button id="codeZoomIn" title="Увеличить шрифт кода">+</button>
+          </div>
+        </div>
+        <div class="editor-wrap">
+          <div id="lineHl"></div>
+          <div class="gutter" id="gutter">1</div>
+          <textarea id="code" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="// введите код алгоритма на C#..."></textarea>
+        </div>
+        <div class="editor-toolbar">
+          <span class="unlimited-badge">● Полный ГОСТ 19.701-90 · Без ограничений</span>
+          <div class="spacer"></div>
+          <button class="act" id="build">
+            <span class="bt-face bt-idle">Построить <span class="arr">▸</span></span>
+            <span class="bt-face bt-busy">Черчу<span class="bt-dots"><i>.</i><i>.</i><i>.</i></span></span>
+            <span class="bt-face bt-done">
+              <svg class="bt-check" width="13" height="13" viewBox="0 0 14 14">
+                <path d="M2 7.5l3.5 3.5L12 3.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>Готово
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- SPLITTER -->
+      <div class="vsplit" id="vsplit" title="Перетащите, чтобы изменить ширину панелей" role="separator" aria-orientation="vertical"></div>
+
+      <!-- RIGHT: FLOWCHART DIAGRAM VIEW -->
+      <section class="panel diagram">
+        <div class="panel-head">
+          <h2 class="panel-label diagram"><span class="pip"></span>Блок-схема</h2>
+          <div class="spacer"></div>
+          <div class="tool-group" role="group" aria-label="Масштаб">
+            <button id="zoomOut" title="Уменьшить масштаб">−</button>
+            <input class="zoom-read" id="zoomRead" type="text" inputmode="numeric" autocomplete="off" title="Масштаб схемы" value="100%">
+            <button id="zoomIn" title="Увеличить масштаб">+</button>
+            <button id="fit" title="Вписать в размер экрана">В размер</button>
+          </div>
+          <button class="btn-ghost" id="gridBtn" title="Показать или скрыть координатную сетку">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M1.5 5h11M1.5 9h11M5 1.5v11M9 1.5v11" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Сетка
+          </button>
+          <button class="btn-ghost" id="edToggle" title="Редактировать схему вручную">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M9.5 1.5l3 3L5 12l-3.5.5L2 9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>✎ Редактировать
+          </button>
+          <button class="btn-ghost" id="dlSvg" title="Скачать векторную блок-схему (SVG)">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M7 1v8M3.5 6L7 9.5 10.5 6M2 12h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>SVG
+          </button>
+          <button class="btn-ghost" id="dlPng" title="Скачать растровое изображение высокого разрешения (PNG)">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M7 1v8M3.5 6L7 9.5 10.5 6M2 12h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>PNG
+          </button>
+          <button class="btn-ghost" id="dlVsdx" title="Скачать файл для Microsoft Visio (.VSDX)">
+            <svg width="13" height="13" viewBox="0 0 14 14"><path d="M7 1v8M3.5 6L7 9.5 10.5 6M2 12h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>VSDX
+          </button>
+        </div>
+        <div class="sheet-scroll" id="scroll">
+          <div class="sheet" id="sheet"></div>
+          <div class="error-box" id="errBox">
+            <div class="error-card">
+              <div class="tag">Ошибка построения</div>
+              <div class="msg" id="errMsg"></div>
+            </div>
+          </div>
+        </div>
+        <div id="edbar"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- TAB 2: FAQ / GOST RULES -->
+  <div class="tabpage" id="tab-faq">
+    <div class="page-wrap">
+      <h2>Требования ГОСТ 19.701-90 (ИСО 5807-85) к блок-схемам</h2>
+      <details class="qa" open>
+        <summary>Почему стрелки ставятся не на всех линиях потока?</summary>
+        <div class="qa-body">
+          Согласно <b>ГОСТ 19.701-90 (пункт 3.2.2)</b>, основным направлением линий потока данных и управления является направление <b>сверху вниз</b> и <b>слева направо</b>. Стрелки на таких линиях <b>не ставятся</b>.<br><br>
+          Стрелки обязательны только в следующих случаях:
+          <ul>
+            <li>Линия идет снизу вверх (возврат в начало цикла <code>for</code>, <code>while</code>, <code>do-while</code>);</li>
+            <li>Линия идет справа налево (обходной поток или возврат);</li>
+            <li>При входе линии в узел слияния, если направление потока может быть неоднозначным.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="qa" open>
+        <summary>Как отображаются операторы ввода и вывода (Console.ReadLine / WriteLine)?</summary>
+        <div class="qa-body">
+          Ввод и вывод данных отображаются символом <b>«Данные» (параллелограмм со скосом граней)</b>.<br>
+          При вызове <code>Console.ReadLine()</code> в блок выносится имя считываемой переменной (например, <code>a</code> или <code>n</code>).<br>
+          При вызове <code>Console.WriteLine("Результат: " + s)</code> или <code>Console.WriteLine($"s = {s}")</code> текстовые пояснения для отчетов отбрасываются, а в блоке отображаются непосредственно переменные (<code>s</code>). Если выводится только строковый литерал без переменных, отображается сам текст.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Как по ГОСТ оформляются циклы for и while?</summary>
+        <div class="qa-body">
+          Для циклов со счетчиком <code>for (int i = 1; i &lt;= n; i++)</code> стандартом ГОСТ 19.701-90 предусмотрен специальный компактный символ <b>«Подготовка» (вытянутый шестиугольник)</b> с надписью вида <code>i от 1 до n</code>.<br>
+          Тело цикла размещается под ним, а в конце тела линия возвращается по левому каналу обратно в шестиугольник со стрелкой.<br>
+          Для циклов с произвольным условием <code>while (cond)</code> используется блок <b>«Решение» (ромб)</b> с ветками «Да» (вниз) и «Нет» (вправо).
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Как объединяются последовательные присваивания и вычисления?</summary>
+        <div class="qa-body">
+          По ГОСТ 19.701-90 последовательные простые операции над переменными (например, <code>s = 0.0; p = 1.0; x = 0.5;</code>) объединяются в один блок <b>«Процесс» (прямоугольник)</b> в виде нескольких строк. Это делает схему компактной, читаемой и предотвращает растягивание алгоритма на десятки однотипных рамок.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Как сохранить отредактированную схему?</summary>
+        <div class="qa-body">
+          В режиме «✎ Редактировать» вы можете свободно перемещать блоки, менять их текст и тип, добавлять новые фигуры. После внесения правок нажмите зеленую кнопку <b>«✓ Сохранить»</b> на нижней панели редактора. Все изменения сохранятся и будут экспортироваться в SVG, PNG и Visio VSDX.
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- TAB 3: EXAMPLES GALLERY -->
+  <div class="tabpage" id="tab-examples">
+    <div class="page-wrap">
+      <h2>Примеры алгоритмов C#</h2>
+      <p class="page-note">Кликните на любую карточку — код загрузится в редактор и блок-схема построится автоматически по ГОСТ.</p>
+      <div class="ex-grid" id="exGrid"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: FIGURES CATALOG -->
+  <div class="tabpage" id="tab-figures">
+    <div class="page-wrap">
+      <h2>Условные обозначения по ГОСТ 19.701-90</h2>
+      <p class="page-note">Каталог геометрических фигур и элементов схем алгоритмов и программ.</p>
+      <div class="legend-body" id="legendBody"></div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="static/js/csharp-examples.js"></script>
+  <script src="static/js/csharp-lexer.js"></script>
+  <script src="static/js/csharp-parser.js"></script>
+  <script src="static/js/cfg-builder.js"></script>
+  <script src="static/js/gost-layout.js"></script>
+  <script src="static/js/gost-renderer.js"></script>
+  <script src="static/js/app.js"></script>
+</body>
+</html>
