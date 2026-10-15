@@ -186,9 +186,43 @@ async function main() {
     { name: `blok-shema-portable-all-${TAG}.zip`, path: `/tmp/gost-release-build/blok-shema-portable-all-${TAG}.zip` }
   ];
 
+  let existingAssets = [];
+  try {
+    existingAssets = await apiRequest({
+      hostname: 'api.github.com',
+      path: `/repos/${REPO_OWNER}/${REPO_NAME}/releases/${release.id}/assets`,
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Gost-Flowchart-Publisher',
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+  } catch (e) {
+    console.log('Не удалось получить список ассетов:', e.message);
+  }
+
   for (const item of filesToUpload) {
     if (!fs.existsSync(item.path)) {
       throw new Error(`Файл не найден: ${item.path}`);
+    }
+    const match = Array.isArray(existingAssets) && existingAssets.find(a => a.name === item.name);
+    if (match) {
+      console.log(`Удаление старой версии ${item.name} (id: ${match.id})...`);
+      try {
+        await apiRequest({
+          hostname: 'api.github.com',
+          path: `/repos/${REPO_OWNER}/${REPO_NAME}/releases/assets/${match.id}`,
+          method: 'DELETE',
+          headers: {
+            'User-Agent': 'Gost-Flowchart-Publisher',
+            'Authorization': 'token ' + token,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+      } catch (delErr) {
+        console.log(`Предупреждение при удалении ${item.name}:`, delErr.message);
+      }
     }
     const uploaded = await uploadAsset(release.upload_url, item.path, item.name);
     console.log(`  ✔ Загружен: ${item.name} -> ${uploaded.browser_download_url || uploaded.id}`);
