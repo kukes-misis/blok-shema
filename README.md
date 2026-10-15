@@ -33,6 +33,20 @@
 
 ---
 
+## 📥 Скачать готовые ZIP-архивы (Releases)
+
+Вы можете просто скачать готовый архив и запускать проект без клонирования через Git:
+
+| Версия / ОС | Ссылка на скачивание | Содержимое |
+|---|---|---|
+| 🪟 **Windows** | [⬇️ csharp-gost-flowchart-windows-v1.0.0.zip](https://github.com/kukes-misis/csharp-gost-flowchart/releases/download/v1.0.0/csharp-gost-flowchart-windows-v1.0.0.zip) | Ярлыки `start-windows.bat`, `open-offline-windows.bat`, веб-приложение, стили, скрипты |
+| 🍎 **macOS** | [⬇️ csharp-gost-flowchart-macos-v1.0.0.zip](https://github.com/kukes-misis/csharp-gost-flowchart/releases/download/v1.0.0/csharp-gost-flowchart-macos-v1.0.0.zip) | Ярлыки `start-macos.command`, `open-offline-macos.command`, веб-приложение, стили, скрипты |
+| 🌐 **Универсальная (Portable)** | [⬇️ csharp-gost-flowchart-portable-all-v1.0.0.zip](https://github.com/kukes-misis/csharp-gost-flowchart/releases/download/v1.0.0/csharp-gost-flowchart-portable-all-v1.0.0.zip) | Все платформы, тесты, консольный CLI `cli.js`, сервер `server.js` |
+
+*Все релизы и исходные файлы доступны на странице: [GitHub Releases v1.0.0](https://github.com/kukes-misis/csharp-gost-flowchart/releases/tag/v1.0.0)*.
+
+---
+
 ## 🚀 Быстрый запуск
 
 ### 🪟 Запуск на Windows
