@@ -12,20 +12,28 @@ echo.
 where node >nul 2>nul
 if %ERRORLEVEL% EQU 0 (
     echo [OK] Node.js обнаружен в системе.
-    echo Запуск локального сервера http://localhost:8080 ...
-    start "C# Flowchart Server" /b node server.js
-    timeout /t 1 /nobreak >nul
-    start http://localhost:8080
+    echo Запуск локального веб-сервера...
+    start "Gost Flowchart Server" /b node server.js
+    timeout /t 2 /nobreak >nul
+    start "" http://127.0.0.1:8080
     echo.
-    echo Веб-интерфейс открыт в вашем браузере!
-    echo Чтобы остановить сервер, закройте это окно.
+    echo [OK] Веб-интерфейс открыт: http://127.0.0.1:8080
+    echo      (Также доступен по http://localhost:8080)
+    echo.
+    echo Автономный режим без сервера: запустите open-offline-windows.bat или index.html
+    echo Онлайн-версия на GitHub:      https://kukes-misis.github.io/blok-shema/
+    echo.
+    echo Чтобы остановить локальный сервер, закройте это окно.
     echo.
 ) else (
-    echo [ВНИМАНИЕ] Node.js не установлен в PATH.
-    echo Открытие автономного веб-интерфейса напрямую в браузере...
-    start index.html
+    echo [ИНФОРМАЦИЯ] Node.js не установлен на этом компьютере.
+    echo Для работы генератора Node.js НЕ ТРЕБУЕТСЯ!
+    echo Открытие автономного интерфейса напрямую в вашем браузере...
     echo.
-    echo Веб-приложение работает локально без сервера!
+    start "" "%~dp0index.html"
+    echo [OK] Файл index.html успешно открыт в браузере.
+    echo Онлайн-версия доступна по ссылке:
+    echo https://kukes-misis.github.io/blok-shema/
     echo.
 )
 

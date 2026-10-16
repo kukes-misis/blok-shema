@@ -600,50 +600,139 @@
   });
 
   // 8. Render Examples Gallery
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function getExamplesList() {
+    if (window.CS_EXAMPLES && Array.isArray(window.CS_EXAMPLES) && window.CS_EXAMPLES.length > 0) {
+      return window.CS_EXAMPLES;
+    }
+    if (window.CS_EXAMPLE_LIST && Array.isArray(window.CS_EXAMPLE_LIST) && window.CS_EXAMPLE_LIST.length > 0) {
+      return window.CS_EXAMPLE_LIST.map(function (idOrObj, idx) {
+        if (idOrObj && typeof idOrObj === 'object') return idOrObj;
+        if (typeof window.CS_EXAMPLE_GET === 'function') {
+          var item = window.CS_EXAMPLE_GET(idOrObj);
+          if (item) return item;
+        }
+        var exData = (window.FC_EXAMPLES && window.FC_EXAMPLES.csharp) || {};
+        if (exData[idOrObj]) return exData[idOrObj];
+        var titles = window.CS_EXAMPLE_TITLES || [];
+        return {
+          id: idOrObj,
+          title: titles[idx] || idOrObj,
+          blurb: 'Пример алгоритма по ГОСТ 19.701-90',
+          source: '',
+          language: 'csharp'
+        };
+      });
+    }
+    var fallback = (window.FC_EXAMPLES && window.FC_EXAMPLES.csharp) || {};
+    var res = [];
+    Object.keys(fallback).forEach(function (k) {
+      var val = fallback[k];
+      if (typeof val === 'string') {
+        res.push({ id: k, title: k, blurb: 'Пример алгоритма', source: val, language: 'csharp' });
+      } else if (val) {
+        res.push(val);
+      }
+    });
+    return res;
+  }
+
   function renderExamplesGallery() {
     var grid = $('exGrid');
     if (!grid) return;
     grid.innerHTML = '';
 
-    var list = window.CS_EXAMPLE_LIST || [];
-    var exData = (window.FC_EXAMPLES && window.FC_EXAMPLES.csharp) || {};
-
-    if (list.length === 0 && Object.keys(exData).length > 0) {
-      Object.keys(exData).forEach(function (k) {
-        list.push({
-          id: k,
-          title: k.toUpperCase(),
-          desc: 'Алгоритм C#',
-          code: typeof exData[k] === 'string' ? exData[k] : (exData[k].source || '')
-        });
-      });
+    var items = getExamplesList();
+    if (!items || items.length === 0) {
+      grid.innerHTML = '<p class="page-note">Примеры загружаются...</p>';
+      return;
     }
 
-    list.forEach(function (item) {
+    var langNames = {
+      csharp: 'C#',
+      python: 'Python',
+      cpp: 'C++',
+      c: 'C',
+      go: 'Go'
+    };
+
+    items.forEach(function (item) {
       var card = document.createElement('div');
       card.className = 'ex-card';
-      var srcCode = item.code || (exData[item.id] ? (exData[item.id].source || exData[item.id]) : '');
-      var preview = srcCode.split('\n').slice(0, 5).join('\n');
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
 
-      card.innerHTML = `
-        <h3>${item.title || item.id}</h3>
-        <div class="sub">${item.desc || item.blurb || 'Алгоритм C#'}</div>
-        <pre>${preview}</pre>
-      `;
+      var id = item.id || '';
+      var title = item.title || item.name || id || 'Алгоритм';
+      var blurb = item.blurb || item.desc || 'Алгоритм по ГОСТ 19.701-90';
+      var srcCode = item.source || item.code || '';
+      var exLang = (item.language || 'csharp').toLowerCase();
+      var badgeText = langNames[exLang] || exLang.toUpperCase();
 
-      card.addEventListener('click', function () {
-        var exLang = item.language || (exData[item.id] ? exData[item.id].language : 'csharp');
+      var previewLines = srcCode.split('\n').slice(0, 5).join('\n');
+      var escapedPreview = escapeHtml(previewLines);
+
+      card.innerHTML =
+        '<div class="ex-card-head">' +
+          '<h3>' + escapeHtml(title) + '</h3>' +
+          '<span class="ex-lang-badge ex-lang-' + escapeHtml(exLang) + '">' + escapeHtml(badgeText) + '</span>' +
+        '</div>' +
+        '<div class="sub">' + escapeHtml(blurb) + '</div>' +
+        '<pre>' + escapedPreview + '</pre>' +
+        '<div class="ex-card-foot">' +
+          '<span class="ex-card-act">Открыть и построить схему →</span>' +
+          '<span class="ex-card-lines">' + (item.lines ? item.lines + ' стр.' : '') + '</span>' +
+        '</div>';
+
+      function selectThisExample() {
+        if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.HapticFeedback) {
+          try { Telegram.WebApp.HapticFeedback.impactOccurred('medium'); } catch (e) {}
+        }
+
         if (exLang && langSelect) {
           langSelect.value = exLang;
           currentLang = exLang;
-          var info = LANG_INFO[currentLang] || { name: currentLang, badge: currentLang };
+          var info = (typeof LANG_INFO !== 'undefined' && LANG_INFO[currentLang]) ? LANG_INFO[currentLang] : { name: exLang, badge: exLang };
           if (srcLangLabel) srcLangLabel.textContent = info.name;
           if (langBadge) langBadge.textContent = info.badge;
         }
+
+        if (typeof userCodes !== 'undefined' && userCodes) {
+          userCodes[currentLang] = srcCode;
+        }
         code.value = srcCode;
         updateGutter();
-        $('tabs').querySelector('[data-tab="gen"]').click();
+
+        var genTab = document.querySelector('.tab[data-tab="gen"]');
+        if (genTab) {
+          genTab.click();
+        } else {
+          var t = $('tabs');
+          if (t) {
+            var b = t.querySelector('[data-tab="gen"]');
+            if (b) b.click();
+          }
+        }
+
         buildFlowchart(true);
+        var langDisplay = (typeof LANG_INFO !== 'undefined' && LANG_INFO[currentLang]) ? LANG_INFO[currentLang].name : currentLang;
+        toast('Пример загружен: ' + title, 'Схема построена по ГОСТ 19.701-90 (' + langDisplay + ')');
+      }
+
+      card.addEventListener('click', selectThisExample);
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectThisExample();
+        }
       });
 
       grid.appendChild(card);
@@ -931,6 +1020,7 @@ func main() {
   // Initialize
   initTheme();
   renderFiguresCatalog();
+  renderExamplesGallery();
   code.value = TEMPLATES.csharp;
   updateGutter();
   buildFlowchart(true);

@@ -1,3 +1,7 @@
 @echo off
+chcp 65001 >nul
+title Блок-Схемы ГОСТ (Автономный режим)
 cd /d "%~dp0"
-start index.html
+
+echo Открытие автономного генератора блок-схем в браузере...
+start "" "%~dp0index.html"

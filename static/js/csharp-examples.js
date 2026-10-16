@@ -18,8 +18,8 @@
   var examples = [
   {
     "id": "linear-io",
-    "title": "Linear I/O",
-    "blurb": "Straight-line flow: read, compute, write. No branches, no loops — the graph is a single path.",
+    "title": "Линейный ввод и вывод (C#)",
+    "blurb": "Последовательный поток: чтение Console.ReadLine(), расчет формул и вывод результатов.",
     "filename": "01_LinearIO.cs",
     "language": "csharp",
     "lines": 30,
@@ -27,8 +27,8 @@
   },
   {
     "id": "if-else",
-    "title": "If / Else If / Else",
-    "blurb": "One decision node with mutually exclusive exits plus a fallthrough else.",
+    "title": "Ветвление if / else if / else (C#)",
+    "blurb": "Классификация оценок: взаимоисключающие условия с ромбами «Решение» по ГОСТ 19.701-90.",
     "filename": "02_IfElse.cs",
     "language": "csharp",
     "lines": 44,
@@ -36,8 +36,8 @@
   },
   {
     "id": "for-loop",
-    "title": "For Loop",
-    "blurb": "Init / test / body / increment cycle with a loop-back edge.",
+    "title": "Цикл for со счетчиком (C#)",
+    "blurb": "Вычисление суммы чисел от 1 до n: символ «Подготовка» (шестиугольник) и левый обвод возврата.",
     "filename": "03_ForLoop.cs",
     "language": "csharp",
     "lines": 32,
@@ -45,8 +45,8 @@
   },
   {
     "id": "while-loop",
-    "title": "While Loop",
-    "blurb": "Pre-tested loop — the body may execute zero times.",
+    "title": "Цикл while с предусловием (C#)",
+    "blurb": "Подсчет цифр в числе: условие цикла проверяется перед выполнением тела.",
     "filename": "04_WhileLoop.cs",
     "language": "csharp",
     "lines": 39,
@@ -54,8 +54,8 @@
   },
   {
     "id": "do-while-loop",
-    "title": "Do / While Loop",
-    "blurb": "Post-tested loop — the body always runs at least once; the back edge returns to the body.",
+    "title": "Цикл do-while с постусловием (C#)",
+    "blurb": "Гипотеза Коллатца: тело выполняется минимум 1 раз, возврат в тело цикла.",
     "filename": "05_DoWhileLoop.cs",
     "language": "csharp",
     "lines": 48,
@@ -63,8 +63,8 @@
   },
   {
     "id": "nested-loops",
-    "title": "Nested Loops",
-    "blurb": "Inner loop inside an outer loop, with a break out of the inner body.",
+    "title": "Вложенные циклы (Таблица умножения)",
+    "blurb": "Двойной цикл for со счетчиками строк и столбцов и выходом break.",
     "filename": "06_NestedLoops.cs",
     "language": "csharp",
     "lines": 38,
@@ -72,8 +72,8 @@
   },
   {
     "id": "method-call",
-    "title": "Method Call",
-    "blurb": "Call nodes, argument passing, and a recursive self-call edge.",
+    "title": "Предопределенный процесс (Вызов метода)",
+    "blurb": "Вычисление факториала и символ блока «Предопределенный процесс» с вертикальными полосами.",
     "filename": "07_MethodCall.cs",
     "language": "csharp",
     "lines": 53,
@@ -81,8 +81,8 @@
   },
   {
     "id": "array-sum",
-    "title": "Array Sum",
-    "blurb": "for and foreach traversal over an array with an accumulator.",
+    "title": "Обработка массива и сумма (C#)",
+    "blurb": "Обход элементов массива циклом for / foreach с суммированием и вычислением среднего.",
     "filename": "08_ArraySum.cs",
     "language": "csharp",
     "lines": 57,
@@ -90,8 +90,8 @@
   },
   {
     "id": "complex-branching",
-    "title": "Complex Branching",
-    "blurb": "switch, try / catch / finally, and short-circuit boolean operators.",
+    "title": "Сложные ветвления и switch (C#)",
+    "blurb": "Калькулятор: многоканальный переключатель switch-case и обработка исключений try/catch.",
     "filename": "09_ComplexBranching.cs",
     "language": "csharp",
     "lines": 65,
@@ -99,8 +99,8 @@
   },
   {
     "id": "lab-series",
-    "title": "Lab Series (C#)",
-    "blurb": "Branching + loop + accumulator + helper method: sum x^k / k!.",
+    "title": "Лабораторная: Степенной ряд (C#)",
+    "blurb": "Студенческая лабораторная работа: вычисление суммы степенного ряда x^k в цикле.",
     "filename": "10_LabSeries.cs",
     "language": "csharp",
     "lines": 67,
@@ -108,8 +108,8 @@
   },
   {
     "id": "python-max-sum",
-    "title": "Python: Max & Sum",
-    "blurb": "Python 3 input(), if/elif/else branching, and range() loop.",
+    "title": "Поиск максимума и сумма (Python)",
+    "blurb": "Python 3: ввод input(), логические ветвления if/elif/else и цикл for со счетчиком range(1, 11).",
     "filename": "11_PythonMaxSum.py",
     "language": "python",
     "lines": 18,
@@ -117,8 +117,8 @@
   },
   {
     "id": "cpp-max-sum",
-    "title": "C++: I/O & Branching",
-    "blurb": "C++ std::cin, std::cout, conditional branching, and for loop.",
+    "title": "Ввод cin, ветвление и вывод cout (C++)",
+    "blurb": "C++: чтение cin >> a >> b >> c, ромбы условий по ГОСТ и цикл for со счетчиком.",
     "filename": "12_CppMaxSum.cpp",
     "language": "cpp",
     "lines": 28,
@@ -126,8 +126,8 @@
   },
   {
     "id": "c-linear-scanf",
-    "title": "C: Scanf & Printf",
-    "blurb": "ANSI C scanf() reading, decision branch, and printf() display.",
+    "title": "Считывание scanf и расчет (ANSI C)",
+    "blurb": "ANSI C: ввод переменных через scanf(), условные переходы и форматированный вывод printf().",
     "filename": "13_CLinearScanf.c",
     "language": "c",
     "lines": 26,
@@ -135,8 +135,8 @@
   },
   {
     "id": "go-branching",
-    "title": "Go: Scan & For Loop",
-    "blurb": "Golang fmt.Scan, multi-variable declarations, and for loop.",
+    "title": "Ветвления и цикл (Go / Golang)",
+    "blurb": "Go: ввод через fmt.Scan, условные операторы if без скобок и цикл for со счетчиком.",
     "filename": "14_GoBranching.go",
     "language": "go",
     "lines": 24,
@@ -175,22 +175,9 @@
 ];
 
   // Human-readable titles, index-aligned with CS_EXAMPLE_LIST.
-  global.CS_EXAMPLE_TITLES = [
-  "Linear I/O",
-  "If / Else If / Else",
-  "For Loop",
-  "While Loop",
-  "Do / While Loop",
-  "Nested Loops",
-  "Method Call",
-  "Array Sum",
-  "Complex Branching",
-  "Lab Series",
-  "Python: Max & Sum",
-  "C++: I/O & Branching",
-  "C: Scanf & Printf",
-  "Go: Scan & For Loop"
-];
+  global.CS_EXAMPLE_TITLES = examples.map(function (e) {
+    return e.title;
+  });
 
   // Convenience: resolve an id (or index) to its example object.
   global.CS_EXAMPLE_GET = function (idOrIndex) {
@@ -199,4 +186,17 @@
     }
     return byId[idOrIndex] || null;
   };
-})(typeof window !== 'undefined' ? window : this);
+
+  // Full array of example objects
+  global.CS_EXAMPLES = examples;
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+      examples: examples,
+      byId: byId,
+      list: global.CS_EXAMPLE_LIST,
+      titles: global.CS_EXAMPLE_TITLES,
+      get: global.CS_EXAMPLE_GET
+    };
+  }
+})(typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));

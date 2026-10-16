@@ -144,15 +144,27 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n[ОШИБКА] Порт ${PORT} уже занят другим приложением.`);
+    console.error(`Вы можете открыть index.html напрямую в браузере без запуска локального сервера!\n`);
+  } else {
+    console.error(`\n[ОШИБКА СЕРВЕРА]`, err.message);
+  }
+  process.exit(1);
+});
+
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`
 ======================================================
   ГОСТ 19.701-90 Flowchart Server & Mini App
 ======================================================
-  Веб-приложение (TMA):   http://localhost:${PORT}
-  API эндпоинт:           http://localhost:${PORT}/api/build
+  Локальный доступ (IPv4): http://127.0.0.1:${PORT}
+  Локальный доступ:        http://localhost:${PORT}
+  API эндпоинт:           http://127.0.0.1:${PORT}/api/build
   Каталог файлов:         ${ROOT}
   Защита заголовков:      CSP + nosniff + 1MB payload limit
+  Автономный режим:        Можно открыть index.html напрямую!
 ======================================================
 `);
 
